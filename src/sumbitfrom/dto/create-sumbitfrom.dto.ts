@@ -10,14 +10,13 @@ export class CreateSubmitFromDto {
   @IsString()
   phone: string;
 
-  @IsOptional()
   @IsString()
-  companyName?: string;
+  position: string;
 
   @IsOptional()
   @IsString()
-  serviceInterestedIn?: string;
+  portfolio?: string;
 
   @IsString()
-  projectDetails: string;
+  coverLetter: string;
 }

@@ -28,6 +28,8 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+
   app.setGlobalPrefix('api/v1');
 
   app.useGlobalPipes(

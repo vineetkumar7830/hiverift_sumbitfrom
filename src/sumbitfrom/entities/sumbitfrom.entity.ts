@@ -14,15 +14,17 @@ export class SubmitFrom {
   @Prop({ required: true })
   phone: string;
 
-  @Prop({ required: false })
-  companyName?: string;
+  @Prop({ required: true })
+  position: string;
+
+  @Prop({ required: true })
+  resume: string; // File path
 
   @Prop({ required: false })
-  serviceInterestedIn?: string;
-  
-  
+  portfolio?: string;
+
   @Prop({ required: true })
-  projectDetails: string;
+  coverLetter: string;
 }
 
 export const SubmitFromSchema =

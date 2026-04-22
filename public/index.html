@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Application | Hiverift</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <form id="applicationForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fullName">FULL NAME *</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Your Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">EMAIL ADDRESS *</label>
+                        <input type="email" id="email" name="email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">PHONE NUMBER *</label>
+                        <input type="text" id="phone" name="phone" placeholder="10-digit number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="position">POSITION *</label>
+                        <select id="position" name="position" required>
+                            <option value="Senior Full-Stack Developer">Senior Full-Stack Developer</option>
+                            <option value="Digital Marketing Specialist">Digital Marketing Specialist</option>
+                            <option value="UI/UX Designer">UI/UX Designer</option>
+                            <option value="Mobile App Developer">Mobile App Developer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resume">RESUME (PDF/DOC) *</label>
+                        <div class="file-upload" onclick="document.getElementById('resume').click()">
+                            <i class="fas fa-upload"></i>
+                            <span id="fileName">Select File</span>
+                            <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" hidden required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio">PORTFOLIO (OPTIONAL)</label>
+                        <input type="text" id="portfolio" name="portfolio" placeholder="Website / LinkedIn">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="coverLetter">COVER LETTER *</label>
+                        <textarea id="coverLetter" name="coverLetter" placeholder="Why you?" required></textarea>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span>Submit Application</span>
+                    <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </form>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('resume').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'Select File';
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+        document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('message');
+            
+            btn.disabled = true;
+            btn.innerHTML = 'Sending...';
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/api/v1/submitfrom', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    msg.className = 'message success';
+                    msg.textContent = 'Application submitted successfully!';
+                    this.reset();
+                    document.getElementById('fileName').textContent = 'Select File';
+                } else {
+                    msg.className = 'message error';
+                    msg.textContent = result.message || 'Something went wrong. Please try again.';
+                }
+            } catch (error) {
+                msg.className = 'message error';
+                msg.textContent = 'Error connecting to server.';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Submit Application</span> <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
+            }
+        });
+    </script>
+</body>
+</html>
